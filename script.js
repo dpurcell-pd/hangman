@@ -6,6 +6,11 @@ class Hangman {
         let repeat = "y";
 
         console.log('you are running the game');
+
+        const TEXT_SECTION = document.querySelector("#text-section");
+        const GAME_TEXT = document.createElement("p");
+        const INTRO = prompt("Hello, what is your name?");
+       
     }
 }
 
