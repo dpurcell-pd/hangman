@@ -1,5 +1,8 @@
 class Hangman {
 
+    static introSection = document.querySelector("#intro-section");
+    static introText = document.createElement("p");
+
     static randomNumber(arrayLength) {
         const index = arrayLength - 1;
         return Math.floor(Math.random() * index);
@@ -10,31 +13,36 @@ class Hangman {
             "apples", "peaches", "pears", "grapes", "oranges", 
             "nectarines", "plums", "dragonfruit", "coconut", "kiwi"
         ];
-        const LENGTH = WORD_ARRAY.length;
-        const ANSWER = WORD_ARRAY[Hangman.randomNumber(LENGTH)];           
-        const INTRO_SECTION = document.querySelector("#intro-section");
-        const NAME = prompt("Hello, what is your name?");         
-        let introText = document.createElement("p");
-        introText.innerHTML = 
+        const ARRAY_LENGTH = WORD_ARRAY.length;
+        const ANSWER = WORD_ARRAY[Hangman.randomNumber(ARRAY_LENGTH)];
+        const WORD_LENGTH = ANSWER.length;      
+        console.log(ANSWER);        
+        const NAME = prompt("Hello, what is your name?");        
+       
+        Hangman.introText.innerHTML = 
         `A pleasure to make your acquaintance, ${NAME}.
         I understand you're here to try your hand at my game.
         <br><br>`;
-        INTRO_SECTION.appendChild(introText);
         
-        setTimeout(() => {
-            introText.innerHTML += "Allow me to set the stage...";            
-            INTRO_SECTION.appendChild(introText);
-        }, 2000);   
-        
-        NewRound.play(ANSWER);
+        Hangman.introSection.appendChild(Hangman.introText);        
+        NewRound.play(ANSWER, WORD_LENGTH);
     }
 }
 
 class NewRound {
-    static play(word) {
+    static play(word, length) {
+        const SPACES_SECTION = document.querySelector("#spaces-section");
+        let spaces = document.createElement("p");
+        SPACES_SECTION.appendChild(spaces);
+
+        setTimeout(() => {
+            Hangman.introText.innerHTML += "Allow me to set the stage...";                                    
+        }, 1000);
+        
         
     }
 }
+
 
 const GAME_BUTTON = document.getElementById("game-btn");
 GAME_BUTTON.addEventListener("click", Hangman.intro);
