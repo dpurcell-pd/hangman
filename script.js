@@ -2,6 +2,18 @@ class Hangman {
 
     static introSection = document.querySelector("#intro-section");
     static introText = document.createElement("p");
+    
+    static spacesSection = document.querySelector("#spaces-section");
+    static spaces = document.createElement("p");
+    
+    static gameTextSection = document.querySelector("#game-text-section");
+    static gameText = document.createElement("p");
+    
+    static rulesSection = document.querySelector("#rules-section");
+    static rulesText = document.createElement("p");
+
+    static chancesSection = document.querySelector("chances");
+    static chances = document.createElement("p");
 
     static randomNumber(arrayLength) {
         const index = arrayLength - 1;
@@ -22,7 +34,10 @@ class Hangman {
         Hangman.introText.innerHTML = 
         `A pleasure to make your acquaintance, ${NAME}.
         I understand you're here to try your hand at my game.
-        <br><br>`;
+        <br><br>
+        
+        Allow me to set the stage...
+        <br>`;  
         
         Hangman.introSection.appendChild(Hangman.introText);        
         NewRound.play(ANSWER, WORD_LENGTH);
@@ -31,16 +46,43 @@ class Hangman {
 
 class NewRound {
     static play(word, length) {
-        const SPACES_SECTION = document.querySelector("#spaces-section");
-        let spaces = document.createElement("p");
-        SPACES_SECTION.appendChild(spaces);
+        let spacesArray = Hangman.spaces.innerHTML.split("");
+        let guessArray = word.split("");        
+       
+        for (let i = 0; i < length; i++) {
+            Hangman.spaces.innerHTML += "_";
+        }            
+        
+        Hangman.spacesSection.appendChild(Hangman.spaces);
 
-        setTimeout(() => {
-            Hangman.introText.innerHTML += "Allow me to set the stage...";                                    
-        }, 1000);
+        Hangman.rulesText.innerHTML += 
+        `You see before you spaces representing the word you must guess.
+        <br><br>
         
-        
+        As I'm sure you've also noticed, you will have a limited number of changes 
+        to guess the word in full.`;
+
+        Hangman.rulesSection.appendChild(Hangman.rulesText);
+
+        while (Hangman.spaces.innerHTML.includes("_")) {
+            guess = prompt("Guess a letter: ");
+
+            if (word.includes(guess)) {
+                for (let i = 0; i < word.length; i++) {
+                    if (word.split("")[i] == guess) {
+                        guess[i] = word[i];
+                    }
+                }
+            }
+            
+        };
+
+        if (word === guess ) {
+            console.log("Win detected!");
+        }
     }
+
+    
 }
 
 
