@@ -1,40 +1,47 @@
 class Hangman { 
 
-    static guess;
-    static answer;
-    static wordLength;
+    static guessGlobal;
+    static answerGlobal;
+    static wordLengthGlobal;
+    static spacesArrayGlobal;
+    static counterGlobal = 7;
 
-    static introSection = document.querySelector("#intro-section");
+    static introSection = document.getElementById("intro-section");
     static introText = document.createElement("p");
-    
-    static spacesSection = document.querySelector("#spaces-section");
-    static spaces = document.createElement("p");
-    
-    static gameTextSection = document.querySelector("#game-text-section");
-    static gameText = document.createElement("p");    
 
+    static rulesSection = document.getElementById("rules-section");
+    static rulesText = document.createElement("p");
+    
+    static spacesSection = document.getElementById("spaces-section");
+    static remainingGuesses = document.createElement("p");
+    static spaces = document.createElement("p");
+ 
     static randomNumber(arrayLength) {
         const index = arrayLength - 1;
         return Math.floor(Math.random() * index);
     }
 
-    static submitGuess() {           
+    static submitGuess() {               
         const GUESS_INPUT = document.getElementById("guess");
-        Hangman.guess = GUESS_INPUT.value;
-        console.log(`Current guess: ${Hangman.guess}`);
+        Hangman.guessGlobal = GUESS_INPUT.value;
+        console.log(`Current guess: ${Hangman.guessGlobal}`);
         GUESS_INPUT.value = "";  
-        NewRound.play(Hangman.answer, Hangman.wordLength);  
+        NewRound.play();  
     }
 
-    static intro() {
+    static intro() {        
         const WORD_ARRAY = [
             "apples", "peaches", "pears", "grapes", "oranges", 
             "nectarines", "plums", "dragonfruit", "coconut", "kiwi"
         ];
+
         const ARRAY_LENGTH = WORD_ARRAY.length;
-        Hangman.answer = WORD_ARRAY[Hangman.randomNumber(ARRAY_LENGTH)];
-        Hangman.wordLength = Hangman.answer.length;      
-        console.log(Hangman.answer);        
+        Hangman.answerGlobal = WORD_ARRAY[Hangman.randomNumber(ARRAY_LENGTH)];
+        const ANSWER = Hangman.answerGlobal;
+        Hangman.wordLengthGlobal = ANSWER.length;      
+        const WORD_LENGTH = Hangman.wordLengthGlobal;
+        
+        console.log(ANSWER);        
         const NAME = prompt("Hello, what is your name?");        
        
         Hangman.introText.innerHTML = 
@@ -43,9 +50,19 @@ class Hangman {
         <br><br>
         
         Allow me to set the stage...
-        <br><br>`;
+        <br>
+        `;
+        Hangman.introSection.appendChild(Hangman.introText);
         
         setTimeout(() => {
+            Hangman.rulesSection.innerText = `Remaining guesses: ${Hangman.counterGlobal}`;
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                Hangman.spaces.innerHTML += "_ ";
+            }
+            Hangman.spacesArrayGlobal = Hangman.spaces.innerHTML.split(" ");
+            Hangman.spacesArrayGlobal.pop();            
+            Hangman.spacesSection.appendChild(Hangman.spaces);
+            
             const GAME_SECTION = document.getElementById("game-section");
             GAME_SECTION.innerHTML = `
                 <form id="form">
@@ -56,33 +73,38 @@ class Hangman {
                     <button type="button" id="submit-btn">Submit Guess</button>
                 </form>
             `
-            for (let i = 0; i < Hangman.wordLength; i++) {
-                Hangman.spaces.innerHTML += "_ ";
-            }        
-            Hangman.spacesSection.appendChild(Hangman.spaces);
 
-            Hangman.introText.innerHTML += 
-            `You see before you spaces representing the word you must guess.
-            <br><br>
+            Hangman.rulesText.innerHTML += 
+                `You see before you spaces representing the word you must guess.
+                <br><br>
             
-            As I'm sure you've also noticed, you will have a limited number of changes 
-            to guess the word in full.`;
+                As I'm sure you've also noticed, you will have a limited number of changes 
+                to guess the word in full.`;
 
             const SUBMIT_BUTTON = document.getElementById("submit-btn");
             SUBMIT_BUTTON.addEventListener("click", Hangman.submitGuess);
         }, 4000);
         
-        Hangman.introSection.appendChild(Hangman.introText);        
+        Hangman.rulesSection.appendChild(Hangman.rulesText);        
         
     }
 }
 
 class NewRound {    
-    static play(word, wordLength) {
-        const GUESS = Hangman.guess;
-        const ANSWER = word;
-       if (String(ANSWER).includes(GUESS)) {
-        console.log("Matching letter found!");
+    static play() {
+        Hangman.counterGlobal--;
+        const ANSWER = Hangman.answerGlobal.toLowerCase();
+        const ANSWER_ARRAY = ANSWER.split("");
+        const WORD_LENGTH = Hangman.wordLengthGlobal;
+        const GUESS = Hangman.guessGlobal.toLowerCase();              
+                      
+        if (ANSWER.includes(GUESS) && Hangman.spacesArrayGlobal.includes("_")) {           
+            for (let i = 0; i < WORD_LENGTH; i++) {
+                if (GUESS === ANSWER_ARRAY[i]) {
+                    Hangman.spacesArrayGlobal[i] = GUESS;
+                    Hangman.spaces.innerHTML = Hangman.spacesArrayGlobal.join(" ");
+                }
+            }
        }
     }    
 }
