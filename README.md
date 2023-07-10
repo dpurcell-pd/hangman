@@ -20,7 +20,7 @@ Empty guesses and repeat letter guesses are allowed, but count towards your tota
 
 Live Site:
 
-https://magenta-hotteok-7d5af9.netlify.app
+https://dpurcell-pd.github.io/hangman/
 
 Installation Instructions:
 
