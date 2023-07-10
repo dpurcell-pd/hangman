@@ -36,7 +36,7 @@ class Hangman {
 
         resetArray.forEach((e) => Hangman[e].innerHTML = "");
 
-        const WORD_ARRAY = ["carrots","spinach","lettuce","broccoli","avocado",
+        const WORD_ARRAY = ["carrots","spinach","lettuce","apple","avocado",
             "papaya","mangoes","apricot","plumcot","peppers",
             "figs","turnips","radish","kumquat","marrows",
             "okra","prunes","quinces","grape","tomato",
