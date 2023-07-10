@@ -31,11 +31,12 @@ class Hangman {
     }
 
     static intro() {
-        Hangman.newGame = true;       
-        Hangman.rulesText.innerHTML = ``;
-        Hangman.spaces.innerHTML = '';
-        Hangman.remainingGuesses.innerHTML = '';
+        Hangman.newGame = true;        
         Hangman.counterGlobal = 7;
+
+        const resetArray = ["rulesText", "spaces", "remainingGuesses", "wrongAnswer"];
+
+        resetArray.forEach((e) => Hangman[e].innerHTML = "");
 
         const WORD_ARRAY = [
             "apples", "peaches", "pears", "grapes", "oranges", 
@@ -110,9 +111,9 @@ class NewRound {
     static play() {
         Hangman.newGame = false;        
         Hangman.wrongAnswer.innerHTML = ``;
-        Hangman.counterGlobal--;
-        if (!Hangman.newGame) {
-            Hangman.remainingGuesses.innerHTML = `Remaining chances: ${Hangman.counterGlobal}`;
+        Hangman.counterGlobal--;       
+        if (!Hangman.newGame && Hangman.spaces.innerHTML.includes("_")) {
+            Hangman.remainingGuesses.innerHTML = `Remaining chances: ${Hangman.counterGlobal}`;           
         }        
         const ANSWER = Hangman.answerGlobal.toLowerCase();
         const ANSWER_ARRAY = ANSWER.split("");
@@ -123,13 +124,15 @@ class NewRound {
             Hangman.rulesText.innerHTML = `
             Ambitious attempt, but not quite...
             `;
-        } else if (GUESS === ANSWER && Hangman.counterGlobal >= 0 && !Hangman.newGame) {            
+        } else if (GUESS === ANSWER && Hangman.counterGlobal >= 0 && !Hangman.newGame) {
+            Hangman.newGame = true;            
             Hangman.spaces.innerHTML = GUESS;
             Hangman.remainingGuesses.innerHTML = '';
             Hangman.rulesText.innerHTML = `
             Congratulations! You have guessed the word in ${7 - Hangman.counterGlobal} guess(es).
         `;
-        } else if (Hangman.counterGlobal < 1 && !Hangman.newGame) {                
+        } else if (Hangman.counterGlobal < 1 && !Hangman.newGame) { 
+                Hangman.newGame = true;               
                 Hangman.rulesText.innerHTML = `
                 Sorry, you weren't able to guess my word this time.
                 <br><br>
@@ -138,8 +141,11 @@ class NewRound {
                 Hangman.remainingGuesses.innerHTML = ``;        
         } else if ((ANSWER.includes(GUESS) 
                 && Hangman.spaces.innerHTML.includes(GUESS))
-                && !Hangman.newGame 
-                || Hangman.guessGlobal === "" && !Hangman.newGame) {                    
+                && Hangman.spaces.innerHTML.includes("_") 
+                && !Hangman.newGame
+                || Hangman.guessGlobal === ""
+                && Hangman.spaces.innerHTML.includes("_") 
+                && !Hangman.newGame) {                    
                     Hangman.wrongAnswer.innerHTML = `
                     Careful! Be sure to use your guesses wisely...
                     <br><br>                    
@@ -154,11 +160,13 @@ class NewRound {
        } else if (!ANSWER.includes(GUESS) && !Hangman.newGame) {            
             Hangman.wrongAnswer.innerHTML = `
             Sorry, there aren't any ${Hangman.guessGlobal}'s in the current word.`;
-       } else if (!Hangman.spaces.innerHTML.includes("_") && Hangman.counterGlobal > 0 && !Hangman.newGame) {           
+       } else if (!Hangman.spaces.innerHTML.includes("_") && Hangman.counterGlobal > 0 && !Hangman.newGame) { 
+            Hangman.newGame = true;          
             Hangman.rulesText.innerHTML = `
             Congratulations! You have guessed the word in ${7 - Hangman.counterGlobal} guess(es).
         `;
-       } else if (!Hangman.newGame) {            
+       } else if (!Hangman.newGame && Hangman.spaces.innerHTML.includes("_")) {
+            Hangman.newGame = true;            
             Hangman.rulesText.innerHTML = `
             Sorry, you weren't able to guess my word this time.
             <br><br>        

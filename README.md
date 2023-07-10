@@ -20,6 +20,8 @@ Empty guesses and repeat letter guesses are allowed, but count towards your tota
 
 Live Site:
 
+https://magenta-hotteok-7d5af9.netlify.app
+
 Installation Instructions:
 
 Open a local server of the script.js file, and click Begin New Game to play. Alternatively, view the live site via the link above.
