@@ -36,8 +36,13 @@ class Hangman {
 
         resetArray.forEach((e) => Hangman[e].innerHTML = "");
 
-        const WORD_ARRAY = [
-             "oranges", "oranges", "oranges"];
+        const WORD_ARRAY = ["carrots","spinach","lettuce","broccoli","avocado",
+            "papaya","mangoes","apricot","plumcot","peppers",
+            "figs","turnips","radish","kumquat","marrows",
+            "okra","prunes","quinces","grape","tomato",
+            "peach","orange","lemon","celery","rhubarb",
+            "lotus","potato","litchi","endive","yam"
+          ];
 
         const ARRAY_LENGTH = WORD_ARRAY.length;
         Hangman.answerGlobal = WORD_ARRAY[Hangman.randomNumber(ARRAY_LENGTH)];
