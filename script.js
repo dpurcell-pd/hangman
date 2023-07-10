@@ -14,6 +14,7 @@ class Hangman {
     
     static spacesSection = document.getElementById("spaces-section");
     static remainingGuesses = document.createElement("p");
+    static wrongAnswer = document.createElement("p");
     static spaces = document.createElement("p");
  
     static randomNumber(arrayLength) {
@@ -55,7 +56,6 @@ class Hangman {
         Hangman.introSection.appendChild(Hangman.introText);
         
         setTimeout(() => {
-            Hangman.rulesSection.innerText = `Remaining guesses: ${Hangman.counterGlobal}`;
             for (let i = 0; i < WORD_LENGTH; i++) {
                 Hangman.spaces.innerHTML += "_ ";
             }
@@ -73,18 +73,24 @@ class Hangman {
                     <button type="button" id="submit-btn">Submit Guess</button>
                 </form>
             `
-
+            Hangman.remainingGuesses.innerHTML = `
+                Remaining chances: ${Hangman.counterGlobal}
+                <br>`            
+            
             Hangman.rulesText.innerHTML += 
-                `You see before you spaces representing the word you must guess.
+                `                
+                You see before you spaces representing the word you must guess.
                 <br><br>
             
                 As I'm sure you've also noticed, you will have a limited number of changes 
-                to guess the word in full.`;
+                to guess the word in full.
+                <br><br>`;
 
             const SUBMIT_BUTTON = document.getElementById("submit-btn");
             SUBMIT_BUTTON.addEventListener("click", Hangman.submitGuess);
         }, 4000);
-        
+
+        Hangman.rulesSection.appendChild(Hangman.remainingGuesses);
         Hangman.rulesSection.appendChild(Hangman.rulesText);        
         
     }
@@ -92,7 +98,9 @@ class Hangman {
 
 class NewRound {    
     static play() {
+        Hangman.wrongAnswer.innerHTML = ``;
         Hangman.counterGlobal--;
+        Hangman.remainingGuesses.innerHTML = `Remaining chances: ${Hangman.counterGlobal}`;
         const ANSWER = Hangman.answerGlobal.toLowerCase();
         const ANSWER_ARRAY = ANSWER.split("");
         const WORD_LENGTH = Hangman.wordLengthGlobal;
@@ -105,6 +113,10 @@ class NewRound {
                     Hangman.spaces.innerHTML = Hangman.spacesArrayGlobal.join(" ");
                 }
             }
+       } else if (!ANSWER.includes(GUESS)) {
+            Hangman.wrongAnswer.innerHTML = `
+            Sorry, there aren't any ${Hangman.guessGlobal}'s in the current word.`;
+            Hangman.rulesSection.appendChild(Hangman.wrongAnswer);
        }
     }    
 }
