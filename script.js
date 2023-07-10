@@ -5,7 +5,6 @@ class Hangman {
     static wordLengthGlobal;
     static spacesArrayGlobal;
     static counterGlobal = 7;
-    static newGame;
 
     static introSection = document.getElementById("intro-section");
     static introText = document.createElement("p");
@@ -30,8 +29,7 @@ class Hangman {
         NewRound.play();  
     }
 
-    static intro() {
-        Hangman.newGame = true;        
+    static intro() {    
         Hangman.counterGlobal = 7;
 
         const resetArray = ["rulesText", "spaces", "remainingGuesses", "wrongAnswer"];
@@ -39,9 +37,7 @@ class Hangman {
         resetArray.forEach((e) => Hangman[e].innerHTML = "");
 
         const WORD_ARRAY = [
-            "apples", "peaches", "pears", "grapes", "oranges", 
-            "nectarines", "plums", "dragonfruit", "coconut", "kiwi"
-        ];
+             "oranges", "oranges", "oranges"];
 
         const ARRAY_LENGTH = WORD_ARRAY.length;
         Hangman.answerGlobal = WORD_ARRAY[Hangman.randomNumber(ARRAY_LENGTH)];
@@ -108,70 +104,80 @@ class Hangman {
 }
 
 class NewRound {   
-    static play() {
-        Hangman.newGame = false;        
+    static play() {        
         Hangman.wrongAnswer.innerHTML = ``;
         Hangman.counterGlobal--;       
-        if (!Hangman.newGame && Hangman.spaces.innerHTML.includes("_")) {
+        if (Hangman.spaces.innerHTML.includes("_")) {
             Hangman.remainingGuesses.innerHTML = `Remaining chances: ${Hangman.counterGlobal}`;           
         }        
         const ANSWER = Hangman.answerGlobal.toLowerCase();
         const ANSWER_ARRAY = ANSWER.split("");
         const WORD_LENGTH = Hangman.wordLengthGlobal;
-        const GUESS = Hangman.guessGlobal.toLowerCase();        
+        const GUESS = Hangman.guessGlobal.toLowerCase();       
 
-        if (GUESS.length > 1 && GUESS !== ANSWER && Hangman.counterGlobal > 0 && !Hangman.newGame) {
+        if (GUESS.length > 1 && GUESS !== ANSWER 
+            && Hangman.counterGlobal > 0) {
+            console.log("full word attempt");
             Hangman.rulesText.innerHTML = `
             Ambitious attempt, but not quite...
             `;
-        } else if (GUESS === ANSWER && Hangman.counterGlobal >= 0 && !Hangman.newGame) {
-            Hangman.newGame = true;            
-            Hangman.spaces.innerHTML = GUESS;
-            Hangman.remainingGuesses.innerHTML = '';
-            Hangman.rulesText.innerHTML = `
-            Congratulations! You have guessed the word in ${7 - Hangman.counterGlobal} guess(es).
-        `;
-        } else if (Hangman.counterGlobal < 1 && !Hangman.newGame) { 
-                Hangman.newGame = true;               
+        } else if (GUESS === ANSWER 
+            && Hangman.counterGlobal >= 0 ) {                      
+                console.log("full word success");
+                Hangman.spaces.innerHTML = GUESS;
+                Hangman.remainingGuesses.innerHTML = '';
                 Hangman.rulesText.innerHTML = `
-                Sorry, you weren't able to guess my word this time.
-                <br><br>
+                Congratulations! You have guessed the word in ${7 - Hangman.counterGlobal} guess(es).
+            `;
+        } else if (Hangman.counterGlobal == 0
+            && ANSWER.includes(GUESS)
+            && GUESS !== ""){
+                for (let i = 0; i < WORD_LENGTH; i++) {
+                    if (GUESS === ANSWER_ARRAY[i]) {
+                        Hangman.spacesArrayGlobal[i] = GUESS;
+                        Hangman.spaces.innerHTML = Hangman.spacesArrayGlobal.join(" ");
+                    }
+                }
+                if (!Hangman.spaces.innerHTML.includes("_")) {
+                    console.log("correct final guess");
+                    Hangman.spaces.innerHTML = ANSWER;
+                    Hangman.rulesText.innerHTML = `
+                    Congratulations! You have guessed the word in 7 guesses.
+                    `;
+                } else {
+                    console.log("incorrect final guess");
+                    Hangman.rulesText.innerHTML = `
+                    Sorry, you weren't able to guess my word this time.
+                    <br><br>
 
-                Feel free to start a new game.`;
-                Hangman.remainingGuesses.innerHTML = ``;        
-        } else if ((ANSWER.includes(GUESS) 
-                && Hangman.spaces.innerHTML.includes(GUESS))
-                && Hangman.spaces.innerHTML.includes("_") 
-                && !Hangman.newGame
-                || Hangman.guessGlobal === ""
-                && Hangman.spaces.innerHTML.includes("_") 
-                && !Hangman.newGame) {                    
-                    Hangman.wrongAnswer.innerHTML = `
+                    Feel free to start a new game.`;
+                    Hangman.remainingGuesses.innerHTML = ``;
+                }               
+            } else if ((ANSWER.includes(GUESS) 
+            && Hangman.spaces.innerHTML.includes(GUESS))
+            && Hangman.spaces.innerHTML.includes("_") 
+            || Hangman.guessGlobal === ""
+            && Hangman.spaces.innerHTML.includes("_")) {
+                console.log("duplicate or empty input guess");      
+                Hangman.wrongAnswer.innerHTML = `
                     Careful! Be sure to use your guesses wisely...
                     <br><br>                    
-                    `;
-       } else if (ANSWER.includes(GUESS) && Hangman.spacesArrayGlobal.includes("_") && !Hangman.newGame) {
-            for (let i = 0; i < WORD_LENGTH; i++) {
-                if (GUESS === ANSWER_ARRAY[i]) {
-                    Hangman.spacesArrayGlobal[i] = GUESS;
-                    Hangman.spaces.innerHTML = Hangman.spacesArrayGlobal.join(" ");
-                }
-            }            
-       } else if (!ANSWER.includes(GUESS) && !Hangman.newGame) {            
-            Hangman.wrongAnswer.innerHTML = `
-            Sorry, there aren't any ${Hangman.guessGlobal}'s in the current word.`;
-       } else if (!Hangman.spaces.innerHTML.includes("_") && Hangman.counterGlobal > 0 && !Hangman.newGame) { 
-            Hangman.newGame = true;          
-            Hangman.rulesText.innerHTML = `
-            Congratulations! You have guessed the word in ${7 - Hangman.counterGlobal} guess(es).
-        `;
-       } else if (!Hangman.newGame && Hangman.spaces.innerHTML.includes("_")) {
-            Hangman.newGame = true;            
-            Hangman.rulesText.innerHTML = `
-            Sorry, you weren't able to guess my word this time.
-            <br><br>        
-            
-            Feel free to start a new game.`;
+                `;
+                } else if (ANSWER.includes(GUESS) 
+                    && Hangman.spacesArrayGlobal.includes("_")) {
+                    console.log("correct letter guess");
+                    for (let i = 0; i < WORD_LENGTH; i++) {
+                        if (GUESS === ANSWER_ARRAY[i]) {
+                            Hangman.spacesArrayGlobal[i] = GUESS;
+                            Hangman.spaces.innerHTML = Hangman.spacesArrayGlobal.join(" ");
+                        }
+                    }
+                } else if (!ANSWER.includes(GUESS)) {            
+                    console.log("incorrect letter guess");            
+                    Hangman.wrongAnswer.innerHTML = `
+                    Sorry, there aren't any ${Hangman.guessGlobal}'s in the current word.`;       
+                } else {
+            console.log("Are you trying to break the game?");
        }
        Hangman.rulesSection.appendChild(Hangman.wrongAnswer);
     }    
@@ -179,9 +185,3 @@ class NewRound {
 
 const GAME_BUTTON = document.getElementById("game-btn");
 GAME_BUTTON.addEventListener("click", Hangman.intro);
-
-
-
-
-
-    
