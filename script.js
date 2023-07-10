@@ -36,12 +36,12 @@ class Hangman {
 
         resetArray.forEach((e) => Hangman[e].innerHTML = "");
 
-        const WORD_ARRAY = ["carrots","spinach","lettuce","apple","avocado",
-            "papaya","mangoes","apricot","plumcot","peppers",
-            "figs","turnips","radish","kumquat","marrows",
-            "okra","prunes","quinces","grape","tomato",
+        const WORD_ARRAY = ["carrot","spinach","lettuce","apple","avocado",
+            "papaya","mango","apricot","plumcot","pepper",
+            "fig","turnip","radish","kumquat","marrow",
+            "okra","prunes","quince","grapes","tomato",
             "peach","orange","lemon","celery","rhubarb",
-            "lotus","potato","litchi","endive","yam"
+            "kiwi","potato","litchi","endive","yam"
           ];
 
         const ARRAY_LENGTH = WORD_ARRAY.length;
@@ -112,8 +112,23 @@ class NewRound {
     static play() {        
         Hangman.wrongAnswer.innerHTML = ``;
         Hangman.counterGlobal--;       
-        if (Hangman.spaces.innerHTML.includes("_")) {
-            Hangman.remainingGuesses.innerHTML = `Remaining chances: ${Hangman.counterGlobal}`;           
+        if (Hangman.spaces.innerHTML.includes("_") 
+        && Hangman.counterGlobal <= 0) {
+            Hangman.remainingGuesses.innerHTML = "";
+            Hangman.spaces.innerHTML = "";
+            Hangman.rulesText.innerHTML = `
+                    Sorry, you weren't able to guess my word this time.
+                    <br><br>
+
+                    Feel free to start a new game.`;
+        } else if (!Hangman.spaces.innerHTML.includes("_")
+        && Hangman.counterGlobal > 0) {
+            Hangman.rulesText.innerHTML = `
+            It appears you've already won this round.
+            `;
+        } else if (Hangman.spaces.innerHTML.includes("_")
+        && Hangman.counterGlobal > 0) {
+            Hangman.remainingGuesses.innerHTML = `Remaining chances: ${Hangman.counterGlobal}`;                       
         }        
         const ANSWER = Hangman.answerGlobal.toLowerCase();
         const ANSWER_ARRAY = ANSWER.split("");
@@ -168,8 +183,10 @@ class NewRound {
                     Careful! Be sure to use your guesses wisely...
                     <br><br>                    
                 `;
-                } else if (ANSWER.includes(GUESS) 
-                    && Hangman.spacesArrayGlobal.includes("_")) {
+                } else if (ANSWER.includes(GUESS)
+                    && Hangman.counterGlobal > 0 
+                    && Hangman.spacesArrayGlobal.includes("_")
+                    && GUESS !== "") {
                     console.log("correct letter guess");
                     for (let i = 0; i < WORD_LENGTH; i++) {
                         if (GUESS === ANSWER_ARRAY[i]) {
@@ -177,13 +194,12 @@ class NewRound {
                             Hangman.spaces.innerHTML = Hangman.spacesArrayGlobal.join(" ");
                         }
                     }
-                } else if (!ANSWER.includes(GUESS)) {            
+                } else if (!ANSWER.includes(GUESS)
+                && Hangman.counterGlobal > 0) {            
                     console.log("incorrect letter guess");            
                     Hangman.wrongAnswer.innerHTML = `
                     Sorry, there aren't any ${Hangman.guessGlobal}'s in the current word.`;       
-                } else {
-            console.log("Are you trying to break the game?");
-       }
+                } 
        Hangman.rulesSection.appendChild(Hangman.wrongAnswer);
     }    
 }
