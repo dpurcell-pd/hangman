@@ -91,16 +91,20 @@ class Hangman {
             
             Hangman.rulesText.innerHTML += 
                 `                
-                You see before you spaces representing the word you must guess.
+                You see before you spaces representing the letters you must guess.
                 <br><br>
             
-                As I'm sure you've also noticed, you will have a limited number of chances 
-                to guess the word in full.
-                <br><br>`;
+                As I'm sure you've also noticed, you will have a limited number of attempts.
+                <br><br>
+                
+                If you're feeling confident, you can guess the full word at any time.
+                <br><br>
+                
+                (Hint: Fruits & Vegetables)`;
 
             const SUBMIT_BUTTON = document.getElementById("submit-btn");
             SUBMIT_BUTTON.addEventListener("click", Hangman.submitGuess);
-        }, 4000);
+        }, 3000);
 
         Hangman.rulesSection.appendChild(Hangman.remainingGuesses);
         Hangman.rulesSection.appendChild(Hangman.rulesText);        
